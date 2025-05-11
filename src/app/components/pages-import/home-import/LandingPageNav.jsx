@@ -196,7 +196,7 @@ export default function LandingPageNav() {
 
             {/* Search Bar - Hidden on mobile */}
             <Box sx={{ 
-              display: { xs: 'none', md: 'flex' }, 
+              display: { xs: 'flex', md: 'flex' }, 
               flexGrow: 1, 
               justifyContent: 'center',
               px: 4 

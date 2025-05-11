@@ -72,7 +72,12 @@ export default function Cart() {
     postalCode: '',
     country: '',
     email: '',
-    phone: ''
+    phone: '',
+    houseNumber: '',
+    StreetNumber: '',
+    State: '',
+    ZipCode: '',
+    LGA: '',
   });
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [orderComplete, setOrderComplete] = useState(false);

@@ -15,9 +15,10 @@ const slideIn = keyframes`
 
 const CarouselContainer = styled(Box)({
   background: 'linear-gradient(135deg, #0ac 0%, #116 100%)',
-  padding: '1 rem 5rem',
   width: '100%',
   position: 'relative',
+  minHeight: '100vh', // Full screen height
+  overflow: 'hidden',
 });
 
 const StyledIconButton = styled(Box)(({ theme }) => ({
@@ -34,13 +35,14 @@ const StyledIconButton = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   cursor: 'pointer',
   borderRadius: '50%',
+  zIndex: 10,
   '&:hover': {
     backgroundColor: '#0ac',
     transform: 'translateY(-50%) scale(1.1)',
   },
   '@media (max-width: 600px)': {
-    width: '32px',
-    height: '32px',
+    width: '36px',
+    height: '36px',
   },
 }));
 
@@ -61,7 +63,7 @@ const ProgressBar = styled(Box)(({ duration }) => ({
   position: 'absolute',
   bottom: 0,
   left: 0,
-  height: '2px',
+  height: '3px',
   backgroundColor: '#0ac',
   animation: `${keyframes`
     from { width: 0; }
@@ -73,6 +75,10 @@ const LandingPageCarousels = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 0,
+    height: typeof window !== 'undefined' ? window.innerHeight : 0,
+  });
 
   const slides = [
     { 
@@ -115,6 +121,26 @@ const LandingPageCarousels = () => {
 
   const SLIDE_DURATION = 5000;
 
+  // Handle window resize and ensure autoplay is always enforced
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleResize = () => {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      };
+      
+      // Always maintain autoplay regardless of user interaction
+      setAutoPlay(true);
+      
+      window.addEventListener('resize', handleResize);
+      handleResize(); // Initialize on mount
+      
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
   const handleNext = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
@@ -122,15 +148,20 @@ const LandingPageCarousels = () => {
     setTimeout(() => setIsTransitioning(false), 500);
   }, [isTransitioning, slides.length]);
 
+  // Enhanced autoplay effect with reset mechanism
   useEffect(() => {
     let timer;
-    if (autoPlay && !isTransitioning) {
-      timer = setInterval(() => {
+    
+    // Always start the timer
+    timer = setInterval(() => {
+      if (!isTransitioning) {
         handleNext();
-      }, SLIDE_DURATION);
-    }
+      }
+    }, SLIDE_DURATION);
+    
+    // Clear timer on unmount
     return () => clearInterval(timer);
-  }, [autoPlay, isTransitioning, handleNext]);
+  }, [isTransitioning, handleNext]);
 
   const handleBack = () => {
     if (isTransitioning) return;
@@ -148,144 +179,154 @@ const LandingPageCarousels = () => {
 
   return (
     <CarouselContainer>
-      <Container 
-        maxWidth={false}
-        sx={{
-          maxWidth: '1600px !important',
-          px: { xs: 2, sm: 4, md: 6 }
-        }}
-      >
-        <Box 
-          sx={{ 
-            width: '100%',
-            position: 'relative',
-            height: { xs: '450px', sm: '600px', md: '750px', lg: '800px' },
-            borderRadius: '16px',
-            overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
-            '&:hover': {
-              '& .carousel-controls': {
-                opacity: 1,
-              },
+      <Box 
+        sx={{ 
+          width: '100%',
+          height: '100vh', // Full viewport height
+          position: 'relative',
+          overflow: 'hidden',
+          '&:hover': {
+            '& .carousel-controls': {
+              opacity: 1,
             },
-          }}
-          onMouseEnter={() => setAutoPlay(false)}
-          onMouseLeave={() => setAutoPlay(true)}
-        >
-          {slides.map((slide, index) => (
-            <Fade 
-              key={slide.src} 
-              in={activeStep === index}
-              timeout={500}
-              sx={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                display: activeStep === index ? 'block' : 'none',
-              }}
-            >
-              <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
-                <Image
-                  src={slide.src}
-                  alt={slide.alt}
-                  priority={index === 0}
-                  fill
-                  sizes="(max-width: 1200px) 100vw, 1200px"
-                  style={{
-                    objectFit: 'cover',
-                    animation: `${slideIn} 500ms ease-out`,
-                  }}
-                />
-                {/* Overlay gradient */}
+          },
+        }}
+        onMouseEnter={() => {}} // Remove pause on hover
+        onMouseLeave={() => {}}
+      >
+        {slides.map((slide, index) => (
+          <Fade 
+            key={slide.src} 
+            in={activeStep === index}
+            timeout={500}
+            sx={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              display: activeStep === index ? 'block' : 'none',
+            }}
+          >
+            <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+              <Image
+                src={slide.src}
+                alt={slide.alt}
+                priority={index === 0}
+                fill
+                sizes="100vw"
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  animation: `${slideIn} 700ms ease-out`,
+                }}
+              />
+              {/* Overlay gradient */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.2) 60%, transparent 85%)',
+                  height: '100%',
+                  pointerEvents: 'none',
+                }}
+              />
+              {/* Slide content */}
+              <Container maxWidth="lg" sx={{ height: '100%', position: 'relative' }}>
                 <Box
                   sx={{
                     position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%)',
-                    height: '50%',
-                    pointerEvents: 'none',
-                  }}
-                />
-                {/* Slide content */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    bottom: { xs: 40, sm: 60 },
-                    left: { xs: 20, sm: 40 },
+                    bottom: { xs: '15%', sm: '20%', md: '22%', lg: '20%' },
+                    left: { xs: 16, sm: 40, md: 60 },
+                    maxWidth: { xs: '80%', sm: '70%', md: '60%' },
                     color: 'white',
+                    backgroundColor: 'rgba(0,0,0,0.4)',
+                    backdropFilter: 'blur(3px)',
+                    borderRadius: '8px',
+                    padding: { xs: '12px', sm: '16px', md: '24px' },
+                    boxShadow: '0 4px 30px rgba(0,0,0,0.2)',
                   }}
                 >
                   <Typography 
-                    variant="h4" 
+                    variant="h2" 
                     sx={{ 
                       fontWeight: 700,
-                      textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                      mb: 1,
+                      textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+                      mb: { xs: 1, sm: 2 },
+                      fontSize: { xs: '2rem', sm: '2.75rem', md: '3.2rem', lg: '3.8rem' },
+                      letterSpacing: '-0.02em',
+                      color: '#ffffff',
                     }}
                   >
                     {slide.title}
                   </Typography>
                   <Typography 
-                    variant="h6" 
+                    variant="h5" 
                     sx={{ 
-                      fontWeight: 400,
-                      textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                      opacity: 0.9,
+                      fontWeight: 500,
+                      textShadow: '0 2px 4px rgba(0,0,0,0.6)',
+                      opacity: 1,
+                      fontSize: { xs: '1rem', sm: '1.25rem', md: '1.4rem', lg: '1.6rem' },
+                      color: '#f0f8ff',
                     }}
                   >
                     {slide.subtitle}
                   </Typography>
                 </Box>
-              </Box>
-            </Fade>
-          ))}
+              </Container>
+            </Box>
+          </Fade>
+        ))}
 
-          {/* Navigation Buttons */}
-          <Box className="carousel-controls" sx={{ opacity: { xs: 1, sm: 0 }, transition: 'opacity 0.3s' }}>
-            <StyledIconButton
-              onClick={handleBack}
-              sx={{ left: { xs: 8, sm: 16 } }}
-            >
-              <IoChevronBackSharp size={20} />
-            </StyledIconButton>
-
-            <StyledIconButton
-              onClick={handleNext}
-              sx={{ right: { xs: 8, sm: 16 } }}
-            >
-              <IoChevronForwardSharp size={20} />
-            </StyledIconButton>
-          </Box>
-
-          {/* Dot Indicators */}
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: { xs: 12, sm: 20 },
-              left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex',
-              alignItems: 'center',
-              zIndex: 2,
-            }}
+        {/* Navigation Buttons */}
+        <Box className="carousel-controls" sx={{ 
+          opacity: { xs: 0.8, sm: windowSize.width < 768 ? 0.8 : 0 }, 
+          transition: 'opacity 0.3s'
+        }}>
+          <StyledIconButton
+            onClick={handleBack}
+            sx={{ left: { xs: 12, sm: 20, md: 32 } }}
+            aria-label="Previous slide"
           >
-            {slides.map((_, index) => (
-              <DotIndicator
-                key={index}
-                active={index === activeStep}
-                onClick={() => handleDotClick(index)}
-              />
-            ))}
-          </Box>
+            <IoChevronBackSharp size={windowSize.width < 600 ? 18 : 22} />
+          </StyledIconButton>
 
-          {/* Progress Bar */}
-          {autoPlay && !isTransitioning && (
-            <ProgressBar duration={SLIDE_DURATION} />
-          )}
+          <StyledIconButton
+            onClick={handleNext}
+            sx={{ right: { xs: 12, sm: 20, md: 32 } }}
+            aria-label="Next slide"
+          >
+            <IoChevronForwardSharp size={windowSize.width < 600 ? 18 : 22} />
+          </StyledIconButton>
         </Box>
-      </Container>
+
+        {/* Dot Indicators */}
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: { xs: '5%', sm: '8%' },
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            alignItems: 'center',
+            zIndex: 2,
+          }}
+        >
+          {slides.map((_, index) => (
+            <DotIndicator
+              key={index}
+              active={index === activeStep}
+              onClick={() => handleDotClick(index)}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </Box>
+
+        {/* Progress Bar - Always visible */}
+        {!isTransitioning && (
+          <ProgressBar duration={SLIDE_DURATION} />
+        )}
+      </Box>
     </CarouselContainer>
   );
 };

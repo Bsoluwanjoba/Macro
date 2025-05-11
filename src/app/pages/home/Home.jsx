@@ -13,7 +13,7 @@ export default function Home() {
     <div>
         <LandingPageNav />
        
-       <Stack spacing={1} className='pt-[2rem]'>
+       <Stack spacing={1} className='pt-[4rem]'>
        <LandingPageCarousels />
        </Stack>
 

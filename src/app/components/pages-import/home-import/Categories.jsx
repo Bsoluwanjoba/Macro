@@ -4,8 +4,13 @@ import { IoMenu } from 'react-icons/io5';
 import { LuSmartphone } from 'react-icons/lu';
 import { LiaLaptopSolid, LiaTvSolid } from 'react-icons/lia';
 import { IoIosTabletPortrait } from 'react-icons/io';
-import { MdOutlineWatch, MdOutlineSpeaker } from 'react-icons/md';
-import { FaHeadphones } from 'react-icons/fa';
+import { MdOutlineWatch, MdOutlineSpeaker, MdOutlineDiamond } from 'react-icons/md';
+import { FaHeadphones, FaDesktop, FaTshirt, FaShoePrints } from 'react-icons/fa';
+import { BsDeviceHdd, BsSmartwatch } from 'react-icons/bs';
+import { FiMonitor } from 'react-icons/fi';
+import { AiOutlineCamera } from 'react-icons/ai';
+import { BiGame } from 'react-icons/bi';
+import { GiNecklace } from 'react-icons/gi';
 import Link from 'next/link';
 import { Box, Paper, Typography, Container, Card, styled, useTheme, useMediaQuery } from '@mui/material';
 
@@ -55,47 +60,79 @@ const CategoryIcons = () => {
       Icon: IoMenu,
       link: "/category/all",
     },
+    // Tech Categories
     {
-      id: "smartphones",
-      title: "Smartphones",
-      Icon: LuSmartphone,
-      link: "/category/smartphones",
-    },
-    {
-      id: "laptops",
-      title: "Laptops",
+      id: "smart-devices",
+      title: "Smart Devices",
       Icon: LiaLaptopSolid,
-      link: "/category/laptops",
+      link: "/category/smart-devices",
     },
     {
-      id: "tablets",
-      title: "Tablets",
-      Icon: IoIosTabletPortrait,
-      link: "/category/tablets",
+      id: "computing",
+      title: "Computing",
+      Icon: FaDesktop,
+      link: "/category/computing",
     },
     {
-      id: "smartwatches",
-      title: "Smartwatches",
-      Icon: MdOutlineWatch,
-      link: "/category/smartwatches",
+      id: "storage",
+      title: "Storage",
+      Icon: BsDeviceHdd,
+      link: "/category/storage",
     },
     {
-      id: "bluetooth-speakers",
-      title: "Speakers",
-      Icon: MdOutlineSpeaker,
-      link: "/category/speakers",
-    },
-    {
-      id: "headphones",
-      title: "Headphones",
+      id: "audio",
+      title: "Audio",
       Icon: FaHeadphones,
-      link: "/category/headphones",
+      link: "/category/audio",
     },
     {
       id: "smart-tvs",
       title: "Smart TVs",
       Icon: LiaTvSolid,
       link: "/category/smart-tvs",
+    },
+    {
+      id: "cameras",
+      title: "Cameras",
+      Icon: AiOutlineCamera,
+      link: "/category/cameras",
+    },
+    {
+      id: "gaming",
+      title: "Gaming",
+      Icon: BiGame,
+      link: "/category/gaming",
+    },
+    // Fashion Categories
+    {
+      id: "clothing",
+      title: "Clothing",
+      Icon: FaTshirt,
+      link: "/category/clothing",
+    },
+    {
+      id: "jewelry",
+      title: "Jewelry",
+      Icon: MdOutlineDiamond,
+      link: "/category/jewelry",
+    },
+    {
+      id: "watches",
+      title: "Watches",
+      Icon: MdOutlineWatch,
+      link: "/category/watches",
+    },
+    {
+      id: "shoes",
+      title: "Shoes",
+      Icon: FaShoePrints,
+      link: "/category/shoes",
+    },
+    {
+      id: "accessories",
+      title: "Accessories",
+      Icon: GiNecklace,
+      link: "/category/accessories",
     },
   ];
 

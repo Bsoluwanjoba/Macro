@@ -30,11 +30,48 @@ const ContentWrapper = styled(Box)({
   zIndex: 2,
 });
 
+const FooterLink = styled(MuiLink)(({ theme }) => ({
+  color: 'white',
+  textDecoration: 'none',
+  transition: 'all 0.3s ease',
+  fontFamily: 'Poppins, sans-serif',
+  display: 'block',
+  '&:hover': { 
+    color: '#fc1',
+    transform: 'translateX(5px)'
+  },
+  fontSize: theme.typography.body2.fontSize,
+  marginBottom: theme.spacing(1),
+}));
+
+const FooterSectionTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: 600,
+  letterSpacing: '0.1em',
+  fontFamily: 'Poppins, sans-serif',
+  marginBottom: theme.spacing(2),
+  position: 'relative',
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    bottom: -8,
+    left: 0,
+    width: 40,
+    height: 2,
+    background: 'rgba(255, 255, 255, 0.5)',
+  }
+}));
+
 const quickLinks = [
   { text: 'About Us', href: '/' },
   { text: 'Contact Us', href: '/' },
   { text: 'Privacy Policy', href: '/' },
   { text: 'Terms Of Service', href: '/' }
+];
+
+const partners = [
+  { name: 'Partner 1', logo: '/Logo/LOGOMARK BLUE.png' },
+  { name: 'Partner 2', logo: '/Logo/LOGOMARK BLUE.png' },
+  { name: 'Partner 3', logo: '/Logo/LOGOMARK BLUE.png' },
 ];
 
 export default function Footer() {
@@ -46,170 +83,179 @@ export default function Footer() {
   return (
     <GradientFooter component="footer">
       <ContentWrapper sx={{ 
-        pt: { xs: 8, md: 10 }, 
-        pb: { xs: 6, md: 8 },
-        minHeight: { xs: '500px', md: '300px' }
+        pt: { xs: 6, md: 8 }, 
+        pb: { xs: 4, md: 6 },
       }}>
         <Container maxWidth="lg">
-          <Stack 
-            direction={{ xs: 'column', md: 'row' }}
-            spacing={{ xs: 6, md: 8 }}
-            justifyContent="space-between"
-            alignItems={{ xs: 'center', md: 'flex-start' }}
-            sx={{ mb: { xs: 6, md: 8 } }}
-          >
-            {/* Logo Section */}
-            <Box 
-              sx={{ 
-                width: { xs: '200px', sm: '240px' },
-                textAlign: { xs: 'center', md: 'left' }
-              }}
-            >
-              <Image 
-                src='/Logo/HOR.LOGO-BLUE.png' 
-                width={240} 
-                height={240} 
-                alt='MacRonics'
-                style={{
-                  width: '100%',
-                  height: 'auto',
-                  objectFit: 'contain',
-                  filter: 'brightness(0) invert(1)' // Make logo white
-                }}
-              />
+          {/* Main Footer Content */}
+          <Box sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            gap: { xs: 4, md: 2 },
+            mb: 4
+          }}>
+            {/* Logo and Description */}
+            <Box sx={{ 
+              width: { xs: '100%', md: '30%' },
+              minWidth: { md: '280px' },
+              mb: { xs: 2, md: 0 }
+            }}>
+              <Box sx={{ 
+                width: { xs: '180px', sm: '200px' },
+                mb: 3,
+                mx: { xs: 'auto', md: 0 }
+              }}>
+                <Image 
+                  src='/Logo/HOR.LOGO-BLUE.png' 
+                  width={240} 
+                  height={240} 
+                  alt='MacRonics'
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    filter: 'brightness(0) invert(1)'
+                  }}
+                />
+              </Box>
+              <Typography variant="body2" sx={{ 
+                color: 'rgba(255, 255, 255, 0.8)',
+                textAlign: { xs: 'center', md: 'left' },
+              }}>
+                Your trusted partner for innovative solutions and quality services.
+              </Typography>
             </Box>
 
-            {/* Quick Links Section */}
-            <Stack 
-              spacing={3}
-              alignItems={{ xs: 'center', md: 'flex-start' }}
-            >
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  fontWeight: 600,
-                  letterSpacing: '0.1em',
-                  fontFamily: 'Poppins, sans-serif'
-                }}
-              >
-                Quick Links
-              </Typography>
-              <Stack 
-                spacing={2}
-                alignItems={{ xs: 'center', md: 'flex-start' }}
-              >
-                {quickLinks.map((link) => (
-                  <MuiLink
-                    key={link.text}
-                    component={Link}
-                    href={link.href}
-                    sx={{
-                      color: 'white',
-                      textDecoration: 'none',
-                      transition: 'all 0.3s ease',
-                      fontFamily: 'Poppins, sans-serif',
-                      '&:hover': { 
-                        color: '#fc1',
-                        transform: 'translateX(5px)'
-                      },
-                    }}
-                  >
-                    {link.text}
-                  </MuiLink>
-                ))}
-              </Stack>
-            </Stack>
+            {/* Quick Links and Contact */}
+            <Box sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              flex: 1,
+              justifyContent: 'space-between',
+              gap: { xs: 4, sm: 2 },
+              minWidth: { md: '400px' }
+            }}>
+              {/* Quick Links */}
+              <Box sx={{ width: { xs: '100%', sm: '48%', md: 'auto' } }}>
+                <FooterSectionTitle variant="h6">
+                  Quick Links
+                </FooterSectionTitle>
+                <Stack spacing={1}>
+                  {quickLinks.map((link) => (
+                    <FooterLink
+                      key={link.text}
+                      component={Link}
+                      href={link.href}
+                    >
+                      {link.text}
+                    </FooterLink>
+                  ))}
+                </Stack>
+              </Box>
 
-            {/* Social Media Section */}
-            <Stack 
-              spacing={3}
-              alignItems={{ xs: 'center', md: 'flex-start' }}
-            >
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  fontWeight: 600,
-                  letterSpacing: '0.1em',
-                  fontFamily: 'Poppins, sans-serif'
-                }}
-              >
+              {/* Contact Info */}
+              <Box sx={{ width: { xs: '100%', sm: '48%', md: 'auto' } }}>
+                <FooterSectionTitle variant="h6">
+                  Contact Us
+                </FooterSectionTitle>
+                <Stack spacing={1}>
+                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                    Email: info@macronics.com
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                    Phone: +1 (123) 456-7890
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                    Address: 123 Tech Street, Digital City
+                  </Typography>
+                </Stack>
+              </Box>
+            </Box>
+
+            {/* Social & Partners */}
+            <Box sx={{ 
+              width: { xs: '100%', md: '30%' },
+              minWidth: { md: '280px' }
+            }}>
+              <FooterSectionTitle variant="h6">
                 Connect With Us
-              </Typography>
-              <Box>
+              </FooterSectionTitle>
+              <Box sx={{ mb: 3 }}>
                 <SocialIcons />
               </Box>
-            </Stack>
-
-            {/* Partners Section */}
-            <Stack 
-              spacing={3}
-              alignItems={{ xs: 'center', md: 'flex-start' }}
-            >
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  fontWeight: 600,
-                  letterSpacing: '0.1em',
-                  fontFamily: 'Poppins, sans-serif'
-                }}
-              >
-                Partners and Delivery Agents
-              </Typography>
-              <Stack 
-                direction="row"
-                spacing={4}
-                flexWrap="wrap"
-                justifyContent={{ xs: 'center', md: 'flex-start' }}
-                alignItems="center"
-              >
-                <Image 
-                  src='/Logo/LOGOMARK BLUE.png' 
-                  width={30} 
-                  height={30} 
-                  alt='partner'
-                  style={{ 
-                    objectFit: 'contain',
-                    filter: 'brightness(0) invert(1)'
-                  }}
-                />
-                <Image 
-                  src='/Logo/LOGOMARK BLUE.png' 
-                  width={30} 
-                  height={30} 
-                  alt='partner'
-                  style={{ 
-                    objectFit: 'contain',
-                    filter: 'brightness(0) invert(1)'
-                  }}
-                />
+              
+              <FooterSectionTitle variant="h6">
+                Our Partners
+              </FooterSectionTitle>
+              <Stack direction="row" spacing={3} justifyContent={{ xs: 'center', md: 'flex-start' }}>
+                {partners.map((partner, index) => (
+                  <Box key={index} sx={{ 
+                    width: 40, 
+                    height: 40,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Image 
+                      src={partner.logo} 
+                      width={30} 
+                      height={30} 
+                      alt={partner.name}
+                      style={{ 
+                        objectFit: 'contain',
+                        filter: 'brightness(0) invert(1)'
+                      }}
+                    />
+                  </Box>
+                ))}
               </Stack>
-            </Stack>
-          </Stack>
+            </Box>
+          </Box>
 
-          <Divider sx={{ my: { xs: 5, md: 6 }, borderColor: 'rgba(255, 255, 255, 0.2)' }} />
+          <Divider sx={{ 
+            my: { xs: 4, md: 5 }, 
+            borderColor: 'rgba(255, 255, 255, 0.2)' 
+          }} />
 
           {/* Copyright Section */}
-          <Stack 
-            direction="row"
-            spacing={1}
-            justifyContent="center"
-            alignItems="center"
-            sx={{
-              color: 'rgba(255, 255, 255, 0.9)',
-              textAlign: 'center',
-              fontSize: { xs: '0.875rem', sm: '1rem' },
-              fontFamily: 'Poppins, sans-serif',
-              py: 2
-            }}
-          >
-            <CgCopyright size={18} />
-            <Typography sx={{ 
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: { xs: '0.875rem', sm: '1rem' }
-            }}>
-              {year.getFullYear()} MacRonics. All rights reserved.
-            </Typography>
-          </Stack>
+          <Box sx={{ 
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            textAlign: 'center',
+            py: 2
+          }}>
+            <Stack 
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              sx={{
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontFamily: 'Poppins, sans-serif',
+                mb: { xs: 2, sm: 0 }
+              }}
+            >
+              <CgCopyright size={18} />
+              <Typography variant="body2">
+                {year.getFullYear()} MacRonics. All rights reserved.
+              </Typography>
+            </Stack>
+            
+            <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+              <FooterLink component={Link} href="/privacy">
+                Privacy Policy
+              </FooterLink>
+              <FooterLink component={Link} href="/terms">
+                Terms of Service
+              </FooterLink>
+              <FooterLink component={Link} href="/cookies">
+                Cookie Policy
+              </FooterLink>
+            </Stack>
+          </Box>
         </Container>
       </ContentWrapper>
     </GradientFooter>
