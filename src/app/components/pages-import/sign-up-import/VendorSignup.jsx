@@ -18,7 +18,6 @@ import {
 } from '@mui/material';
 import { FaBuilding, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import Image from 'next/image';
-// import { useVendorRegistration } from './useVendorRegistration';
 
 const VendorRegistrationSchema = Yup.object().shape({
   business_name: Yup.string()
